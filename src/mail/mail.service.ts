@@ -1,22 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { MailerService } from '@nestjs-modules/mailer';
-import { ConfigService } from '@nestjs/config';
+import { Injectable } from "@nestjs/common";
+import { MailerService } from "@nestjs-modules/mailer";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class MailService {
   constructor(
     private readonly mailerService: MailerService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {}
 
   async sendVerificationEmail(email: string, token: string) {
     const baseUrl =
-      this.configService.get<string>('BASE_URL') || 'http://localhost:3000';
+      this.configService.get<string>("BASE_URL") || "http://localhost:3000";
     const url = `${baseUrl}/auth/verify-email?token=${token}`;
 
     await this.mailerService.sendMail({
       to: email,
-      subject: 'Verify your Al-Orobah Account',
+      subject: "Verify your Al-Orobah Account",
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px;">
           <h2>Welcome to our Store!</h2>
@@ -28,6 +28,17 @@ export class MailService {
           <p>If the button doesn't work, copy and paste this link: <br> ${url}</p>
         </div>
       `,
+    });
+  }
+  async sendPasswordResetCode(email: string, code: string) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: "Reset your password",
+      html: `
+      <p>Your password reset code:</p>
+      <h2>${code}</h2>
+      <p>This code expires in 10 minutes.</p>
+    `,
     });
   }
 }

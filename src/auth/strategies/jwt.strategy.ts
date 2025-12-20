@@ -1,14 +1,16 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { UsersService } from '../../users/users.service';
-import { DevicesService } from '../../devices/devices.service';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { PassportStrategy } from "@nestjs/passport";
+import { ExtractJwt, Strategy } from "passport-jwt";
+
+import { UsersService } from "../../users/users.service";
+import { DevicesService } from "../../devices/devices.service";
+import { Types } from "mongoose";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly usersService: UsersService,
-    private readonly devicesService: DevicesService,
+    private readonly devicesService: DevicesService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -16,17 +18,21 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: { sub: string; deviceId: string }) {
+  async validate(payload: { sub: string; deviceId: string; role: string }) {
     const user = await this.usersService.findById(payload.sub);
-    if (!user) throw new UnauthorizedException('User does not exist');
+    if (!user) {
+      throw new UnauthorizedException("User does not exist");
+    }
 
-    await this.devicesService.validateSession(payload.sub, payload.deviceId);
+    await this.devicesService.validateSession(
+      new Types.ObjectId(payload.sub),
+      payload.deviceId
+    );
 
     return {
-      sub: user._id.toString(),
+      sub: payload.sub,
       deviceId: payload.deviceId,
-      email: user.email,
-      name: user.name,
+      role: payload.role,
     };
   }
 }
