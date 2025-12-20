@@ -30,6 +30,10 @@ export class CategoriesService {
     return this.categoryModel.find({ isActive: true }).lean();
   }
 
+  async findBySlug(slug: string): Promise<Category | null> {
+    return this.categoryModel.findOne({ slug }).exec();
+  }
+
   async findTree() {
     return this.categoryModel.aggregate([
       { $match: { isActive: true } },

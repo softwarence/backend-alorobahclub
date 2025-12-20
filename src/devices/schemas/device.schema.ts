@@ -5,7 +5,7 @@ export type DeviceDocument = Device & Document;
 
 @Schema({ timestamps: true })
 export class Device {
-  @Prop({ type: Types.ObjectId, ref: "User", required: true, index: true })
+  @Prop({ type: Types.ObjectId, ref: "User", required: true })
   userId: Types.ObjectId;
 
   @Prop({ required: true })
@@ -14,10 +14,10 @@ export class Device {
   @Prop({ index: true })
   refreshToken: string;
 
-  @Prop({ index: true, expires: "30d" })
+  @Prop({ index: true, expires: 0 })
   refreshTokenExpiresAt: Date;
 
-  @Prop({ default: false, index: true })
+  @Prop({ default: false })
   isRevoked: boolean;
 
   @Prop({ default: Date.now })
