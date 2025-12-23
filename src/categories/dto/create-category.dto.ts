@@ -1,15 +1,16 @@
-import { IsString, IsOptional, IsMongoId } from "class-validator";
+import { IsString, IsOptional, IsMongoId, IsNotEmpty } from "class-validator";
+import { Types } from "mongoose";
 
 export class CreateCategoryDto {
-  name: {
-    en: string;
-    ar: string;
-  };
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
+  @IsNotEmpty()
   @IsString()
   slug: string;
 
   @IsOptional()
   @IsMongoId()
-  parentId?: string;
+  parentId?: Types.ObjectId;
 }

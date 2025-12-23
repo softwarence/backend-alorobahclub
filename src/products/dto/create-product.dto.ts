@@ -68,7 +68,7 @@ export class CreateProductDto {
   slug: string;
 
   @IsArray()
-  @IsMongoId({ each: true }) // <--- THIS IS THE FIX
+  @IsMongoId({ each: true })
   @IsNotEmpty({ each: true })
   categoryIds: string[];
 

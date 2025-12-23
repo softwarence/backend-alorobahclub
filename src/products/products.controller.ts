@@ -38,4 +38,22 @@ export class ProductsController {
   findAll(@Query("status") status?: string) {
     return this.productsService.findAll(status);
   }
+
+  @Patch(":id")
+  @Roles(Role.ADMIN)
+  update(@Param("id") id: string, @Body() dto: Partial<CreateProductDto>) {
+    return this.productsService.update(id, dto);
+  }
+
+  @Delete(":id")
+  @Roles(Role.ADMIN)
+  remove(@Param("id") id: string) {
+    return this.productsService.deleteOne(id);
+  }
+
+  @Delete()
+  @Roles(Role.ADMIN)
+  removeMany(@Body("ids") ids: string[]) {
+    return this.productsService.deleteBulk(ids);
+  }
 }

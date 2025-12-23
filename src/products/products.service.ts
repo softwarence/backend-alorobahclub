@@ -51,10 +51,53 @@ export class ProductsService {
     return createdProduct.save();
   }
 
+  async update(id: string, dto: Partial<CreateProductDto>) {
+    const updatedProduct = await this.productModel
+      .findByIdAndUpdate(id, { $set: dto }, { new: true, runValidators: true })
+      .populate("categoryIds")
+      .lean();
+
+    if (!updatedProduct) {
+      throw new BadRequestException(`Product with ID ${id} not found.`);
+    }
+
+    return updatedProduct;
+  }
+
   async findAll(status?: string) {
     return this.productModel
       .find(status ? { status } : {})
       .populate("categoryIds")
       .lean();
+  }
+
+  async deleteOne(id: string) {
+    const deletedProduct = await this.productModel.findByIdAndDelete(id);
+
+    if (!deletedProduct) {
+      throw new BadRequestException(`Product with ID ${id} not found.`);
+    }
+
+    return {
+      message: "Product deleted successfully",
+      id: deletedProduct._id,
+    };
+  }
+
+  async deleteBulk(ids: string[]) {
+    if (!ids || ids.length === 0) {
+      throw new BadRequestException("No product IDs provided for deletion.");
+    }
+
+    const objectIds = ids.map((id) => new Types.ObjectId(id));
+
+    const result = await this.productModel.deleteMany({
+      _id: { $in: objectIds },
+    });
+
+    return {
+      message: `${result.deletedCount} products deleted successfully.`,
+      deletedCount: result.deletedCount,
+    };
   }
 }

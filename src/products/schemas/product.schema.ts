@@ -48,8 +48,8 @@ export class Product {
   variants: any[];
 
   @Prop({
-    enum: ["active", "draft", "archived"],
-    default: "draft",
+    enum: ["draft", "published"],
+    default: "published",
   })
   status: string;
 

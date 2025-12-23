@@ -5,17 +5,8 @@ export type CategoryDocument = Category & Document;
 
 @Schema({ timestamps: true })
 export class Category {
-  @Prop({
-    type: {
-      en: { type: String, required: true },
-      ar: { type: String, required: true },
-    },
-    required: true,
-  })
-  name: {
-    en: string;
-    ar: string;
-  };
+  @Prop({ required: true })
+  name: string;
 
   @Prop({ required: true })
   slug: string;
