@@ -1,24 +1,14 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Types } from "mongoose";
+import { Document, Types } from "mongoose";
+
+export type ProductDocument = Product & Document;
 
 @Schema({ timestamps: true })
 export class Product {
-  @Prop({
-    type: {
-      en: String,
-      ar: String,
-    },
-    required: true,
-  })
+  @Prop({ type: { en: String, ar: String }, required: true })
   title: { en: string; ar: string };
 
-  @Prop({
-    type: {
-      en: String,
-      ar: String,
-    },
-    required: true,
-  })
+  @Prop({ type: { en: String, ar: String }, required: true })
   description: { en: string; ar: string };
 
   @Prop({ required: true })
@@ -28,10 +18,10 @@ export class Product {
   categoryIds: Types.ObjectId[];
 
   @Prop()
-  brand: string;
+  brand?: string;
 
   @Prop([String])
-  images: string[];
+  images?: string[];
 
   @Prop([
     {
@@ -47,10 +37,7 @@ export class Product {
   ])
   variants: any[];
 
-  @Prop({
-    enum: ["draft", "published"],
-    default: "published",
-  })
+  @Prop({ enum: ["draft", "published"], default: "published" })
   status: string;
 
   @Prop({ default: false })
@@ -59,6 +46,6 @@ export class Product {
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
 ProductSchema.index({ slug: 1 }, { unique: true });
+ProductSchema.index({ "variants.sku": 1 }, { unique: true });
 ProductSchema.index({ status: 1 });
 ProductSchema.index({ categoryIds: 1 });
-ProductSchema.index({ "variants.sku": 1 }, { unique: true });

@@ -12,6 +12,10 @@ import { VerificationsModule } from "./verifications/verifications.module";
 import { MailModule } from "./mail/mail.module";
 import { CategoriesModule } from "./categories/categories.module";
 import { ProductsModule } from "./products/products.module";
+import { CartModule } from "./carts/carts.module";
+import { OrdersModule } from './orders/orders.module';
+import { NewslettersModule } from './newsletters/newsletters.module';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -51,6 +55,10 @@ import { ProductsModule } from "./products/products.module";
     CategoriesModule,
     CategoriesModule,
     ProductsModule,
+    CartModule,
+    OrdersModule,
+    NewslettersModule,
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

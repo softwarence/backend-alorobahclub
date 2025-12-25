@@ -48,6 +48,45 @@ export class UsersService {
     return this.userModel.findById(userId);
   }
 
+  async findAll(query: any = {}) {
+    const { search, page = 1, limit = 10 } = query;
+
+    const filter: any = {};
+
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const skip = (page - 1) * limit;
+
+    const [users, total] = await Promise.all([
+      this.userModel
+        .find(filter)
+        .select("-password")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      this.userModel.countDocuments(filter),
+    ]);
+
+    return {
+      code: 200,
+      message: "Users retrieved successfully",
+      results: users.length,
+      data: users,
+      meta: {
+        total,
+        page: Number(page),
+        limit: Number(limit),
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
   async updateProfile(userId: string, update: UpdateUserDto) {
     console.log("Update payload received:", update);
 

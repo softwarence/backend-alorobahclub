@@ -6,7 +6,6 @@ import {
   IsObject,
   ValidateNested,
   IsNotEmpty,
-  ArrayMinSize,
   IsMongoId,
 } from "class-validator";
 import { Type } from "class-transformer";

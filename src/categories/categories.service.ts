@@ -7,7 +7,7 @@ import {
 } from "@nestjs/common";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { InjectModel } from "@nestjs/mongoose";
-import { Category } from "./schemas/category.schema";
+import { Category, CategoryDocument } from "./schemas/category.schema";
 import { Model } from "mongoose";
 
 @Injectable()
@@ -113,7 +113,7 @@ export class CategoriesService {
     return this.categoryModel.find({ isActive: true }).lean();
   }
 
-  async findBySlug(slug: string): Promise<Category | null> {
+  async findBySlug(slug: string): Promise<CategoryDocument | null> {
     return this.categoryModel.findOne({ slug }).exec();
   }
 

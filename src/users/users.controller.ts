@@ -9,6 +9,7 @@ import {
   Delete,
   Param,
   BadRequestException,
+  Query,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
@@ -43,6 +44,11 @@ export class UsersController {
         isVerified: user.isVerified,
       },
     };
+  }
+
+  @Get()
+  findAll(@Query() query: any) {
+    return this.usersService.findAll(query);
   }
 
   @Patch("me")
